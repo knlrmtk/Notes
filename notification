@@ -39,3 +39,27 @@ pipeline {
 			}
 		}    
 }
+
+################################
+Email Notifications In Jenkins
+################################
+-> We can configure Email notifications in Jenkins
+-> With this option we can send email notification to team members after jenkins job execution completed.
+-> We need to configure SMTP properties to send emails
+
+		-> Go To Manage Jenkins 
+		-> Go To System
+		-> Go to "Extended E-mail Notification"
+		-> We will add company provided SMTP server details to send emails.
+
+Note: For practise we can use GMAIL SMTP Properties
+
+SMTP Server : smtp.gmail.com
+SMTP Port : 587
+
+Note: Under Advanced section add your gmail account credential for authentication purpose.
+##### Note: Instead of gmail password we need to add gmail app password ######
+##### URL To generate gmail app pwd : https://myaccount.google.com/apppasswords
+=> Select use TLS checkbox
+=> For testing purpose we can use "Email Notification option which is available at the bottom of the page"
+
