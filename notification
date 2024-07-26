@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    tools{
+        maven "maven3"
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/ashokitschool/maven-web-app.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+    
+	   post {
+			failure {
+				emailext(
+					subject: "Build Failed: ${currentBuild.fullDisplayName}",
+					body: "The build ${currentBuild.fullDisplayName} failed. Please check the console output for more details.",
+					to: 'kunal.ramteke325@gmail.com',
+					from: 'knlrmtk@gmail.com',
+					attachLog: true
+				)
+			}
+			success {
+				emailext(
+					subject: "Build Successful: ${currentBuild.fullDisplayName}",
+					body: "The build ${currentBuild.fullDisplayName} was successful.",
+					to: 'kunal.ramteke325@gmail.com',
+					from: 'knlrmtk@gmail.com',
+					attachLog: true
+				)
+			}
+		}    
+}
