@@ -1,0 +1,70 @@
+ubuntu@ip-172-31-9-15:~/edcr-postgres$ cat postgres-deploy.yml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backbone
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: backbone
+  labels:
+    app: postgres
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:9.6
+        ports:
+        - containerPort: 5432
+          name: postgres
+        env:
+        - name: username
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: username
+        - name: password
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: password
+        - name: db
+          value: postgres
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres-data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: backbone
+  labels:
+    app: postgres
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres
+  type: ClusterIP
