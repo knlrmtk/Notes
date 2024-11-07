@@ -1,3 +1,5 @@
 https://github.com/prasadharke/EKS-Terraform-me.git
 
 https://github.com/Sunbird-AIAssistant/ai-bot-installer.git
+
+SSL/TLS into Nginx container: https://macdonaldchika.medium.com/how-to-install-tls-ssl-on-docker-nginx-container-with-lets-encrypt-5bd3bad1fd48
