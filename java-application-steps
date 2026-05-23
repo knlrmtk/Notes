@@ -1,0 +1,291 @@
+
+##### Maven command to create a new Java project named sbi-app:-
+
+mvn archetype:generate \
+  -DgroupId=com.sbi.app \
+  -DartifactId=sbi-app \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DinteractiveMode=false
+
+
+#### Directory Structure:-
+sbi-app/
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── sbi
+    │               └── app
+    │                   └── App.java
+    └── test
+        └── java
+            └── com
+                └── sbi
+                    └── app
+                        └── AppTest.java
+
+
+##### Update POM file:-
+vim sbi-app/pom.xml
+
+<properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+</properties>
+
+
+<dependencies>
+
+    <!-- Micrometer Core -->
+    <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-core</artifactId>
+        <version>1.13.0</version>
+    </dependency>
+
+    <!-- Prometheus Registry -->
+    <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-registry-prometheus</artifactId>
+        <version>1.13.0</version>
+    </dependency>
+
+</dependencies>
+
+##### Add filed section in POM file:-
+
+<build>
+    <plugins>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+
+            <configuration>
+                <source>21</source>
+                <target>21</target>
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.0</version>
+
+            <executions>
+                <execution>
+                    <phase>package</phase>
+
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+
+                    <configuration>
+
+                        <transformers>
+
+                            <transformer implementation=
+                              "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+
+                                <mainClass>com.sbi.app.Application</mainClass>
+
+                            </transformer>
+
+                        </transformers>
+
+                    </configuration>
+                </execution>
+            </executions>
+
+        </plugin>
+
+    </plugins>
+</build>
+
+
+##### Create directory and file:-
+mkdir -p src/main/java/com/sbi/app/monitoring
+vim src/main/java/com/sbi/app/monitoring/MetricsServer.java
+
+package com.sbi.app.monitoring;
+public class MetricsServer {
+
+    public static void start() {
+        System.out.println("Metrics Server Started");
+    }
+}
+
+
+##### Update Application file:-
+
+src/main/java/com/sbi/app/Application.java
+
+package com.sbi.app;
+import com.sbi.app.monitoring.MetricsServer;
+public class Application {
+
+    public static void main(String[] args) {
+
+        MetricsServer.start();
+
+        System.out.println("SBI App Started");
+    }
+}
+
+
+##### Run Application using command:-
+	java -jar target/sbi-app-1.0-SNAPSHOT.jar
+	java -cp target/sbi-app-1.0-SNAPSHOT.jar com.sbi.app.Application
+
+##### Test Application & Metrics:-
+	http://localhost:8080/hello
+	http://localhost:9400/metrics
+
+##### useful commands ######
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ java -jar sbi-app-1.0-SNAPSHOT.jar 
+Prometheus metrics available on port 9400
+SBI App Started
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ java -jar sbi-app-1.0-SNAPSHOT.jar &
+[1] 19386
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ Prometheus metrics available on port 9400
+SBI App Started
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ netstat -ntpl
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 192.168.122.1:53        0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   
+tcp6       0      0 :::9400                 :::*                    LISTEN      19386/java          
+tcp6       0      0 ::1:631                 :::*                    LISTEN      -                   
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ ps -ef | grep sbi-app
+kunal      19386   13124  0 10:20 pts/0    00:00:01 java -jar sbi-app-1.0-SNAPSHOT.jar
+kunal      23088   13124  0 10:37 pts/0    00:00:00 grep --color=auto sbi-app
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ kill 19386
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app/target$ netstat -ntpl
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 192.168.122.1:53        0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   
+tcp6       0      0 ::1:631                 :::*                    LISTEN      -                   
+[1]+  Exit 143                java -jar sbi-app-1.0-SNAPSHOT.jar
+
+==========================================================================================================================
+Project Structure:
+
+project-root/
+│── docker-compose.yml
+└── sbi-app/
+    ├── Dockerfile
+    ├── pom.xml (Maven) OR build.gradle (Gradle)
+    └── src/
+
+vim docker-compose.yml
+
+version: "3.8"
+services:
+  sbi-app:
+    build:
+      context: ./sbi-app
+      dockerfile: Dockerfile
+    container_name: sbi-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+
+vim sbi-app/dockerfile
+
+# ---------- Build Stage ----------
+FROM maven:3.9-eclipse-temurin-17 AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+
+# ---------- Run Stage ----------
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+==============================================================================================================================
+
+kunal@kunal-H110:~/JAVA-PROJECT$ ls -l
+total 8
+-rw-rw-r-- 1 kunal kunal  212 May 23 12:17 docker-compose.yml
+drwxrwxr-x 3 kunal kunal 4096 May 23 12:28 sbi-app
+kunal@kunal-H110:~/JAVA-PROJECT$ cd sbi-app
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app$ ls -l
+total 16
+-rw-rw-r-- 1 kunal kunal 1671 May 23 09:49 dependency-reduced-pom.xml
+-rw-rw-r-- 1 kunal kunal  335 May 23 12:28 Dockerfile
+-rw-rw-r-- 1 kunal kunal 2426 May 23 09:49 pom.xml
+drwxrwxr-x 4 kunal kunal 4096 May 23 09:09 src
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app$ cat Dockerfile 
+# ---------- Build Stage ----------
+FROM maven:3.9-eclipse-temurin-21 AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+
+# ---------- Run Stage ----------
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+kunal@kunal-H110:~/JAVA-PROJECT/sbi-app$ cat ../docker-compose.yml 
+version: "3.8"
+services:
+  sbi-app:
+    build:
+      context: ./sbi-app
+      dockerfile: Dockerfile
+    container_name: sbi-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
