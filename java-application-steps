@@ -17,7 +17,7 @@ sbi-app/
     │       └── com
     │           └── sbi
     │               └── app
-    │                   └── App.java
+    │                   └── Application.java
     └── test
         └── java
             └── com
