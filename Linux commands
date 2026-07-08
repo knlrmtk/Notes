@@ -1,1 +1,31 @@
+### command to find service name using port number:
+
+	grep <port_number> /etc/services
+
+	netstat -ntplu | grep :<port_number>
+
+	lsof -i :<port_number>
+
+==========================================================================
+Resize EBS volumes and File system:
+-------------------------------------
+select EBS volume --> Action --> Modify --> Increase Size --> OK
+
+If Volume is Non-Root:
+	#lsblk
+	#df -h
+	#file -s <partition_name>
+	#resize2fs or #xfs_growfs <partirion_name>
+
+	ext4 -- resize2fs
+	xfs  -- xfs_growfs
+
+If Volume is Root:
+	#lsblk
+	#df -h
+	#file -s <partition_name>
+	#growpart < partition> <number>
+	#resize2fs or #xfs_growfs <partirion_name>
+
+==========================================================================
 
