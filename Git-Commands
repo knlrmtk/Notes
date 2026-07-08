@@ -5,10 +5,12 @@ $ git remote -v
 origin	https://github.com/knlrmtk/uoion-app15.git (fetch)
 origin	https://github.com/knlrmtk/uoion-app15.git (push)
 
-change remote repo url
+change remote repo url:
 $ git remote remove origin
 
 update the new repo:
 $ git remote add origin https://github.com/knlrmtk/uoion-apps15.git
 
+Push code to remote repo:
+$ git push -u origin main
 ======================================================================================================================
