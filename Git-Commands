@@ -1,1 +1,14 @@
+-------------------------------------------
+Steps to update Remote Repository:
+-------------------------------------------
+$ git remote -v
+origin	https://github.com/knlrmtk/uoion-app15.git (fetch)
+origin	https://github.com/knlrmtk/uoion-app15.git (push)
 
+change remote repo url
+$ git remote remove origin
+
+update the new repo:
+$ git remote add origin https://github.com/knlrmtk/uoion-apps15.git
+
+=================================================================================================================================================
