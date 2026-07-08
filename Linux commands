@@ -1,10 +1,8 @@
 ### command to find service name using port number:
 
-	grep <port_number> /etc/services
-
-	netstat -ntplu | grep :<port_number>
-
-	lsof -i :<port_number>
+grep <port_number> /etc/services
+netstat -ntplu | grep :<port_number>
+lsof -i :<port_number>
 
 ==========================================================================
 Resize EBS volumes and File system:
