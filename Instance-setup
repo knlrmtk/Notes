@@ -1,0 +1,50 @@
+User Data for ec2 instances:
+
+#!/bin/bash
+yum update -y
+dnf install java-17-amazon-corretto -y
+cd /opt
+wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.42/bin/apache-tomcat-10.1.42.tar.gz
+tar -xvf apache-tomcat-10.1.42.tar.gz
+mv apache-tomcat-10.1.42 tomcat
+chmod +x /opt/tomcat/bin/*.sh
+nohup /opt/tomcat/bin/startup.sh &
+----------------------------------------------------------------------------------------------------------------------
+
+#!/bin/bash
+
+# Update system
+dnf update -y
+
+# Install Java 21
+dnf install -y java-21-amazon-corretto
+
+# Verify Java installation
+java -version
+
+# Download Tomcat 9
+cd /opt
+wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.106/bin/apache-tomcat-9.0.106.tar.gz
+
+# Extract Tomcat
+tar -xzf apache-tomcat-9.0.106.tar.gz
+
+# Rename directory
+mv apache-tomcat-9.0.106 tomcat
+
+# Set permissions
+chmod +x /opt/tomcat/bin/*.sh
+
+# Copy build from s3 bucket to tomcat document root
+aws s3 cp s3://uoion-deploy/uoion.war /opt/tomcat/webapps/
+
+# Start Tomcat
+/opt/tomcat/bin/startup.sh
+--------------------------------------------------------------------------------------------------------------------------------
+
+git clone <url>
+mvn clean package
+aws s3 cp ~/target/uoion.war s3://uoion-deploy/
+
+
+
