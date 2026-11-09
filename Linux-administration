@@ -1,1 +1,4 @@
-
+To check default kernel:      # grubby --default-kernel
+List the kenel:               # rpm -q kernel
+File name start with vmlinuz-* are kernels:       # ls -l /boot
+rpm -qa | grep kernel
